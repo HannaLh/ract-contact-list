@@ -12,8 +12,6 @@ export default function UserCreate() {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [website, setWebsite] = useState('');
-    // const[active,activechange]=useState(true);
-    // const[validation,valchange]=useState(false);
 
     const navigate=useNavigate();
 
