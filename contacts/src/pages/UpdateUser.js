@@ -6,12 +6,14 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+const baseURL = 'http://localhost:3000/users/';
+
 export default function UserUpdate() {
 
     const { id } = useParams();
 
     useEffect(() => {
-        fetch("http://localhost:3000/users/" + id).then((res) => {
+        fetch(`${baseURL}` + id).then((res) => {
             return res.json();
         }).then((resp) => {
             setName(resp.email);
@@ -35,7 +37,7 @@ export default function UserUpdate() {
         const userData={email,name,username,website};
         
 
-        fetch("http://localhost:3000/users/" +id,{
+        fetch(`${baseURL}` +id,{
             method:"PUT",
             headers:{"content-type":"application/json"},
             body:JSON.stringify(userData)
