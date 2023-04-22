@@ -10,52 +10,40 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const baseURL = 'https://jsonplaceholder.typicode.com/users';
+const baseURL = 'http://localhost:3000/users/';
 
 export default function Users() {
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-        UsersGet()
-    }, [])
+    const [users, setUsers] = useState(null);
+    const navigate = useNavigate();
 
-    const UsersGet = () => {
-        fetch(`${baseURL}`)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setUsers(result)
-                }
-            )
+    const updateUser = id => {
+        navigate(`${baseURL}` + id);
     }
 
-    const UpdateUser = id => {
-        window.location = '/update/'+id
-    }
-
-    const UserDelete = id => {
-        const data = {
-            'id': id
+    const userDelete = (id) => {
+        if (window.confirm('Do you want to remove?')) {
+            fetch(`${baseURL}` + id, {
+                method: "DELETE"
+            }).then((res) => {
+                alert('Removed successfully.')
+                window.location.reload();
+            }).catch((err) => {
+                console.log(err.message)
+            })
         }
-        fetch('https://www.mecallapi.com/api/users/', {
-                method: 'DELETE',
-                headers: {
-                Accept: 'application/form-data',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                alert('It was deleted');
-                if (result.statusCode === 200){
-                    setUsers(prevUsers => prevUsers.filter(user => user.id !== id))
-                }
-            }
-        )
     }
+
+    useEffect(() => {
+        fetch(`${baseURL}`).then((res) => {
+            return res.json();
+        }).then((resp) => {
+            setUsers(resp);
+        }).catch((err) => {
+            console.log(err.message);
+        })
+    }, [])
 
     return (
         <div>
@@ -87,7 +75,7 @@ export default function Users() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {users.map((user) => (
+                                {users && users.map((user) => (
                                     <TableRow key={user.ID}>
                                         <TableCell align="right">{user.id}</TableCell>
                                         <TableCell align="left">{user.email}</TableCell>
@@ -96,8 +84,8 @@ export default function Users() {
                                         <TableCell align="left">{user.website}</TableCell>
                                         <TableCell align="center">
                                             <ButtonGroup color="primary" aria-label="outlined primary button group">
-                                                <Button onClick={() => UpdateUser(user.id)}>Edit</Button>
-                                                <Button onClick={() => UserDelete(user.id)}>Del</Button>
+                                                <Button onClick={() => updateUser(user.id)}>Edit</Button>
+                                                <Button onClick={() => userDelete(user.id)}>Del</Button>
                                             </ButtonGroup>
                                         </TableCell>
                                     </TableRow>

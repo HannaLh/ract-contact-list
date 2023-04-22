@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -6,37 +7,34 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 export default function UserCreate() {
-    const handleSubmit = event => {
-      event.preventDefault();
-      const data = {
-          'email': email,
-          'name': name,
-          'username': username,
-          'website': website,
-      }
-      fetch('https://jsonplaceholder.typicode.com/users/create', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/form-data',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          alert(result['message'])
-          if (result['status'] === 'ok') {
-            window.location.href = '/';
-          }
-        }
-      )
-    }
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [website, setWebsite] = useState('');
+    // const[active,activechange]=useState(true);
+    // const[validation,valchange]=useState(false);
+
+    const navigate=useNavigate();
+
+    const handleSubmit=(e)=>{
+      e.preventDefault();
+      const userData={email,name,username,website};
+      
+  
+      fetch("http://localhost:3000/users/",{
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify(userData)
+      }).then((res)=>{
+        alert('Saved successfully.')
+        navigate('/');
+      }).catch((err)=>{
+        console.log(err.message)
+      })
+  
+    }
+
     return (
       <Container maxWidth="xs">
           <div>
@@ -87,22 +85,27 @@ export default function UserCreate() {
                       onChange={(e) => setWebsite(e.target.value)}
                   />
                   </Grid>
-              <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-              >
-                  Create
-              </Button>
-              <Button
-                  type="cancel"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-              >
-                  Cancel
-              </Button>
+
+                  <Grid container
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                        >
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                      >
+                            Create
+                        </Button>
+                        <Button 
+                            variant="outlined" 
+                            color="error"
+                            href="/"
+                        >
+                            Cancel
+                        </Button>
+                  </Grid>
               </Grid>
               </form>
           </div>
