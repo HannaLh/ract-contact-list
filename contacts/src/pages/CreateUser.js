@@ -8,11 +8,11 @@ import Container from '@mui/material/Container';
 export default function UserCreate() {
   const handleSubmit = event => {
     event.preventDefault();
-    var data = {
-      'fname': fname,
-      'lname': lname,
-      'username': username,
+    const data = {
       'email': email,
+      'name': name,
+      'username': username,
+      'website': website,
     }
     fetch('https://jsonplaceholder.typicode.com/users/create', {
       method: 'POST',
@@ -33,10 +33,10 @@ export default function UserCreate() {
     )
   }
 
-  const [fname, setFname] = useState('');
-  const [lname, setLname] = useState('');
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [website, setWebsite] = useState('');
   return (
     <Container maxWidth="xs">
         <div>
@@ -47,25 +47,24 @@ export default function UserCreate() {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                 <TextField
-                    autoComplete="fname"
-                    name="firstName"
                     variant="outlined"
                     required
                     fullWidth
-                    id="firstName"
-                    label="First Name"
-                    onChange={(e) => setFname(e.target.value)}
-                    autoFocus
+                    id="email"
+                    label="Email"
+                    onChange={(e) => setEmail(e.target.value)}
                 />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
+                    autoComplete="name"
+                    name="name"
                     variant="outlined"
                     required
                     fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    onChange={(e) => setLname(e.target.value)}
+                    id="name"
+                    label="Full Name"
+                    onChange={(e) => setName(e.target.value)}
                 />
                 </Grid>
                 <Grid item xs={12}>
@@ -83,9 +82,9 @@ export default function UserCreate() {
                     variant="outlined"
                     required
                     fullWidth
-                    id="email"
-                    label="Email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="website"
+                    label="Website"
+                    onChange={(e) => setWebsite(e.target.value)}
                 />
                 </Grid>
             <Button
@@ -95,6 +94,14 @@ export default function UserCreate() {
                 color="primary"
             >
                 Create
+            </Button>
+            <Button
+                type="cancel"
+                fullWidth
+                variant="contained"
+                color="primary"
+            >
+                Cancel
             </Button>
             </Grid>
             </form>

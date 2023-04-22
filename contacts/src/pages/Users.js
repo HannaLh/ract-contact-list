@@ -39,21 +39,21 @@ const UserDelete = id => {
 const data = {
     'id': id
 }
-fetch('https://jsonplaceholder.typicode.com/users/', {
-    method: 'DELETE',
-    headers: {
-    Accept: 'application/form-data',
-    'Content-Type': 'application/json',
+fetch('https://www.mecallapi.com/api/users/', {
+        method: 'DELETE',
+        headers: {
+        Accept: 'application/form-data',
+        'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
 })
 .then(res => res.json())
 .then(
     (result) => {
-    alert('It was deleted')
-    if (result['status'] === 'ok') {
-        UsersGet()
-    }
+        alert('It was deleted')
+        if (result.statusCode === 200) {
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== id))
+        }
     }
 )
 }
