@@ -1,58 +1,50 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useParams } from 'react-router-dom';
 
 export default function UserUpdate() {
+
+    const { id } = useParams();
+
+    useEffect(() => {
+        fetch("http://localhost:3000/users/" + id).then((res) => {
+            return res.json();
+        }).then((resp) => {
+            setName(resp.email);
+            setEmail(resp.email);
+            setUsername(resp.username);
+            setWebsite(resp.website);
+        }).catch((err) => {
+            console.log(err.message);
+        })
+    }, [id]);
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [website, setWebsite] = useState('');
 
-    const { id } = useParams();
-    useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/users/"+id)
-        .then(res => res.json())
-        .then(
-            (result) => {
-            setEmail(result.user.email)
-            setName(result.user.name)
-            setUsername(result.user.username)
-            setWebsite(result.user.website)
-            }
-        )
-    }, [id])
+    const navigate=useNavigate();
 
-    const handleSubmit = event => {
-        event.preventDefault();
-        const data = {
-            'id': id,
-            'email': email,
-            'name': name,
-            'username': username,
-            'website': website,
-        }
-        fetch('https://jsonplaceholder.typicode.com/users/update', {
-        method: 'PUT',
-        headers: {
-            Accept: 'application/form-data',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        const userData={email,name,username,website};
+        
+
+        fetch("http://localhost:3000/users/" +id,{
+            method:"PUT",
+            headers:{"content-type":"application/json"},
+            body:JSON.stringify(userData)
+        }).then((res)=>{
+            alert('Saved successfully.')
+            navigate('/');
+        }).catch((err)=>{
+            console.log(err.message)
         })
-        .then(res => res.json())
-        .then(
-        (result) => {
-            alert(result['message'])
-            if (result['status'] === 'ok') {
-                window.location.href = '/';
-            }
-        }
-        )
     }
 
     return (
@@ -85,7 +77,6 @@ export default function UserUpdate() {
                                 label="Full Name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                autoFocus
                             />
                         </Grid>
                         <Grid item xs={12}>

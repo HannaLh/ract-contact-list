@@ -19,7 +19,7 @@ export default function Users() {
     const navigate = useNavigate();
 
     const updateUser = id => {
-        navigate(`${baseURL}` + id);
+        navigate("/update/user/" + id);
     }
 
     const userDelete = (id) => {
