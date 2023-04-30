@@ -1,59 +1,6 @@
 {
   "users": [
     {
-      "email": "Nathan@yesenia.net",
-      "name": "Nathan@yesenia.net",
-      "username": "Samantha",
-      "website": "ramiro.info",
-      "id": 3
-    },
-    {
-      "id": 4,
-      "name": "Patricia Lebsack",
-      "username": "Karianne",
-      "email": "Julianne.OConner@kory.org",
-      "address": {
-        "street": "Hoeger Mall",
-        "suite": "Apt. 692",
-        "city": "South Elvis",
-        "zipcode": "53919-4257",
-        "geo": {
-          "lat": "29.4572",
-          "lng": "-164.2990"
-        }
-      },
-      "phone": "493-170-9623 x156",
-      "website": "kale.biz",
-      "company": {
-        "name": "Robel-Corkery",
-        "catchPhrase": "Multi-tiered zero tolerance productivity",
-        "bs": "transition cutting-edge web services"
-      }
-    },
-    {
-      "id": 5,
-      "name": "Chelsey Dietrich",
-      "username": "Kamren",
-      "email": "Lucio_Hettinger@annie.ca",
-      "address": {
-        "street": "Skiles Walks",
-        "suite": "Suite 351",
-        "city": "Roscoeview",
-        "zipcode": "33263",
-        "geo": {
-          "lat": "-31.8129",
-          "lng": "62.5342"
-        }
-      },
-      "phone": "(254)954-1289",
-      "website": "demarco.info",
-      "company": {
-        "name": "Keebler LLC",
-        "catchPhrase": "User-centric fault-tolerant solution",
-        "bs": "revolutionize end-to-end systems"
-      }
-    },
-    {
       "id": 6,
       "name": "Mrs. Dennis Schulist",
       "username": "Leopoldo_Corkery",
@@ -181,27 +128,6 @@
       "username": "dcdcdcd",
       "website": "sdcsdcsd.com",
       "id": 12
-    },
-    {
-      "email": "anna.leoshko@gmail.com",
-      "name": "Anna Leoshko",
-      "username": "gfhgnfgg",
-      "website": "anna.coms",
-      "id": 13
-    },
-    {
-      "email": "anna.leoshko@gmail.com",
-      "name": "Anna Leoshko",
-      "username": "Hanna20220",
-      "website": "gyvygyt.com",
-      "id": 14
-    },
-    {
-      "email": "anna.leoshko@gmail.com",
-      "name": "Anna Leoshko",
-      "username": "ererre",
-      "website": "sdcdvdv.com",
-      "id": 15
     }
   ]
 }

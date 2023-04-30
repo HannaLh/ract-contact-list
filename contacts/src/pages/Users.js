@@ -1,94 +1,123 @@
-import React, { useEffect, useState } from "react";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 
-const baseURL = 'http://localhost:3000/users/';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    tableCellClasses,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Button,
+    ButtonGroup,
+    Box,
+    Typography,
+    styled
+} from '@mui/material';
+
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUsers, deleteUser } from "../store/actions/usersActions";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+    border: 0,
+    },
+}));
+
+function createData(id, email, name, username, website) {
+    return{id, email, name, username, website};
+}
+
+const rows = [
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    createData('Eclair', 262, 16.0, 24, 6.0),
+    createData('Cupcake', 305, 3.7, 67, 4.3),
+    createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
 
 export default function Users() {
-    const [users, setUsers] = useState(null);
+    const dispatch = useDispatch();
+    const {users} = useSelector(state => state.dataUsers);
     const navigate = useNavigate();
 
-    const updateUser = id => {
-        navigate("/update/user/" + id);
+    useEffect(() => {
+        dispatch(loadUsers());
+    }, []);
+
+    const createUser = () => {
+        navigate('/create');
     }
 
-    const userDelete = (id) => {
+    const handleDelete = id => {
         if (window.confirm('Do you want to remove?')) {
-            fetch(`${baseURL}` + id, {
-                method: "DELETE"
-            }).then((res) => {
-                alert('Removed successfully.')
-                window.location.reload();
-            }).catch((err) => {
-                console.log(err.message)
-            })
+            dispatch(deleteUser(id));
         }
     }
-
-    useEffect(() => {
-        fetch(`${baseURL}`).then((res) => {
-            return res.json();
-        }).then((resp) => {
-            setUsers(resp);
-        }).catch((err) => {
-            console.log(err.message);
-        })
-    }, [])
 
     return (
         <div>
                 <Paper>
-                    <Box display="flex">
+                    <Box style={{margin: 30}} display="flex" >
                         <Box flexGrow={1} margin="30">
                             <Typography component="h2" variant="h6" color="primary" gutterBottom>
                                 USERS
                             </Typography>
                         </Box>
                         <Box>
-                            <Link to="/create">
-                                <Button variant="contained" color="primary">
-                                    CREATE
-                                </Button>
-                            </Link>
+                            <Button 
+                                variant="contained" 
+                                color="primary" 
+                                onClick={createUser}>
+                                    CREATE NEW USER
+                            </Button>
                         </Box>
                     </Box>
                     <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
+                        <Table sx={{ minWidth: 1000 }} style={{marginTop: 10}} aria-label="customized table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell align="right">ID</TableCell>
-                                    <TableCell align="left">Email</TableCell>
-                                    <TableCell align="left">Name</TableCell>
-                                    <TableCell align="left">Username</TableCell>
-                                    <TableCell align="left">Website</TableCell>
-                                    <TableCell align="center">Action</TableCell>
+                                    <StyledTableCell>ID</StyledTableCell>
+                                    <StyledTableCell align="center">Email</StyledTableCell>
+                                    <StyledTableCell align="center">Name</StyledTableCell>
+                                    <StyledTableCell align="center">User Name</StyledTableCell>
+                                    <StyledTableCell align="center">Website</StyledTableCell>
+                                    <StyledTableCell align="center">Actions</StyledTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {users && users.map((user) => (
-                                    <TableRow key={user.ID}>
-                                        <TableCell align="right">{user.id}</TableCell>
-                                        <TableCell align="left">{user.email}</TableCell>
-                                        <TableCell align="left">{user.name}</TableCell>
-                                        <TableCell align="left">{user.username}</TableCell>
-                                        <TableCell align="left">{user.website}</TableCell>
-                                        <TableCell align="center">
-                                            <ButtonGroup color="primary" aria-label="outlined primary button group">
-                                                <Button onClick={() => updateUser(user.id)}>Edit</Button>
-                                                <Button onClick={() => userDelete(user.id)}>Del</Button>
+                                    <StyledTableRow key={user.ID}>
+                                        <StyledTableCell component="th" scope="row">
+                                            {user.id}
+                                        </StyledTableCell>
+                                        <StyledTableCell align="center">{user.email}</StyledTableCell>
+                                        <StyledTableCell align="center">{user.name}</StyledTableCell>
+                                        <StyledTableCell align="center">{user.username}</StyledTableCell>
+                                        <StyledTableCell align="center">{user.website}</StyledTableCell>
+                                        <StyledTableCell align="center">
+                                        <ButtonGroup color="primary" aria-label="outlined primary button group">
+                                                <Button onClick={() => navigate(`/update/user/${user.id}`)}>Edit</Button>
+                                                <Button onClick={() => handleDelete(user.id)}>Del</Button>
                                             </ButtonGroup>
-                                        </TableCell>
-                                    </TableRow>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
                                 ))}
                             </TableBody>
                         </Table>
