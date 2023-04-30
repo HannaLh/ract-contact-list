@@ -57,7 +57,7 @@ export default function UserUpdate() {
                                 required
                                 fullWidth
                                 name="email"
-                                value={form.emal}
+                                value={form.email}
                                 label="Email"
                                 onChange={handleInputChange}
                             />
