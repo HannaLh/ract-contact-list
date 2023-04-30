@@ -1,59 +1,53 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect  } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-
-const baseURL = 'http://localhost:3000/users/';
+import { useDispatch, useSelector } from "react-redux";
+import {
+    Button,
+    TextField,
+    Grid,
+    Typography,
+    Container
+} from '@mui/material';
+import { getSingleUser, updateUser } from "../store/actions/usersActions";
 
 export default function UserUpdate() {
+    const navigate=useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.dataUser);
+    const {id} = useParams();
 
-    const { id } = useParams();
+    const [form, setForm] = useState({
+        email: "",
+        name: "",
+        username: "",
+        website: "",
+    });
 
     useEffect(() => {
-        fetch(`${baseURL}` + id).then((res) => {
-            return res.json();
-        }).then((resp) => {
-            setName(resp.email);
-            setEmail(resp.email);
-            setUsername(resp.username);
-            setWebsite(resp.website);
-        }).catch((err) => {
-            console.log(err.message);
-        })
-    }, [id]);
+        dispatch(getSingleUser(id));
+    }, []);
+    
+    useEffect(() => {
+        if (user) {
+            setForm({...user});
+        }
+    }, [user])
 
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [website, setWebsite] = useState('');
-
-    const navigate=useNavigate();
+    const handleInputChange = ({target: {name, value}}) => {
+        setForm({...form, [name]: value});
+    }
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        const userData={email,name,username,website};
-        
-
-        fetch(`${baseURL}` +id,{
-            method:"PUT",
-            headers:{"content-type":"application/json"},
-            body:JSON.stringify(userData)
-        }).then((res)=>{
-            alert('Saved successfully.')
-            navigate('/');
-        }).catch((err)=>{
-            console.log(err.message)
-        })
+        dispatch(updateUser(form, id));
+        navigate("/");
     }
 
     return (
         <Container maxWidth="xs">
             <div>
                 <Typography component="h1" variant="h5">
-                    User
+                User
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
@@ -62,23 +56,23 @@ export default function UserUpdate() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="email"
+                                name="email"
+                                value={form.emal}
                                 label="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleInputChange}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="name"
                                 name="name"
+                                value={form.name}
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="name"
                                 label="Full Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={handleInputChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -86,10 +80,10 @@ export default function UserUpdate() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="username"
+                                name="username"
+                                value={form.username}
                                 label="Username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={handleInputChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -97,21 +91,34 @@ export default function UserUpdate() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="website"
+                                name="website"
+                                value={form.website}
                                 label="Website"
-                                value={website}
-                                onChange={(e) => setWebsite(e.target.value)}
+                                onChange={handleInputChange}
                             />
+                        </Grid>
+
+                        <Grid container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            > 
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                            >
+                                Update
+                            </Button>
+                            <Button 
+                                variant="outlined" 
+                                color="error"
+                                href="/"
+                            >
+                                Cancel
+                            </Button>
                         </Grid>
                     </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                    >
-                        Update
-                    </Button>
                 </form>
             </div>
         </Container>
